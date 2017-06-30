@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="husky_enabled" default="false" />
   <arg name="world_name" default="$(find sawyer_gazebo)/worlds/clearpath_playpen.world"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -11,15 +10,9 @@
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
   </include>
-  <group if="$(arg husky_enabled)">
-    <include file="$(find sawyer_gazebo)/launch/spawn_sawyer_husky.launch" />
-    <include file="$(find husky_sawyer_moveit_config)/launch/move_group.launch"/>
-    <include file="$(find husky_sawyer_moveit_config)/launch/moveit_rviz.launch"/>
-  </group>
-  <group unless="$(arg husky_enabled)">
-    <include file="$(find sawyer_gazebo)/launch/spawn_sawyer_base.launch"/>
-    <include file="$(find husky_sawyer_moveit_config)/launch/move_group.launch"/>
-    <include file="$(find sawyer_moveit_config)/launch/moveit_rviz.launch"/>
-  </group>
+
+  <include file="$(find sawyer_gazebo)/launch/spawn_sawyer_base.launch"/>
+  <include file="$(find husky_sawyer_moveit_config)/launch/move_group.launch"/>
+  <include file="$(find sawyer_gazebo)/launch/base_rviz.launch"/>
 
 </launch>

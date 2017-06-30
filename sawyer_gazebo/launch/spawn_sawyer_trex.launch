@@ -3,7 +3,7 @@
   <arg name="velodyne_enabled" default="false"/>
   <arg name="sick_enabled" default="false"/>
   <arg name="ur5_enabled" default="false"/>
-  <arg name="kinectv2_enabled" default="false"/>
+  <arg name="kinectv2_enabled" default="true"/>
   <arg name="mbzirc_gripper" default="false"/>
   <arg name="sawyer_control_yaml_file" default="$(find sawyer_control)/config/control_sawyer.yaml"/>
 
@@ -21,6 +21,7 @@
   <include file="$(find trex_control)/launch/trex_control.launch"/>
   <rosparam command="load" file="$(arg sawyer_control_yaml_file)" />
   <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" args="robot/limb/right"/>
+  <node pkg="sawyer_control" type="stow_sawyer" name="stow_sawyer"/>
 
   <group if="$(arg kinectv2_enabled)">
 
