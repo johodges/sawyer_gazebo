@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="husky_sawyer" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find husky_description)/urdf/husky.urdf.xacro" />
+  <xacro:include filename="$(find sawyer_gazebo)/urdf/sawyer.urdf.xacro" />
+  <xacro:husky_robot />
+  <xacro:sawyer_robot real_mass="false"/>
+  <joint name="sawyer_arm_base" type="fixed">
+    <parent link="top_plate_link" />
+    <child link="right_arm_base_link" />
+    <origin xyz="0.25 0 0.0065" rpy="0.0 0.0 -1.57" />
+  </joint>
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    </plugin>
+  </gazebo>
+
+</robot>

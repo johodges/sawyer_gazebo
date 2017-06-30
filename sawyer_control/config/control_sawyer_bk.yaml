@@ -1,0 +1,24 @@
+arm_controller:
+  type: position_controllers/JointTrajectoryController
+  topic: "test"
+  joints:
+     - right_j0
+     - right_j1
+     - right_j2
+     - right_j3
+     - right_j4
+     - right_j5
+     - right_j6
+  constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.5
+      right_j0: {trajectory: 0.1, goal: 0.1}
+      right_j1: {trajectory: 0.1, goal: 0.1}
+      right_j2: {trajectory: 0.1, goal: 0.1}
+      right_j3: {trajectory: 0.1, goal: 0.1}
+      right_j4: {trajectory: 0.1, goal: 0.1}
+      right_j5: {trajectory: 0.1, goal: 0.1}
+      right_j6: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10
