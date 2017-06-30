@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="velodyne_enabled" default="false"/>
+  <arg name="sick_enabled" default="false"/>
+  <arg name="ur5_enabled" default="false"/>
+  <arg name="kinectv2_enabled" default="false"/>
+  <arg name="mbzirc_gripper" default="false"/>
+  <arg name="sawyer_control_yaml_file" default="$(find sawyer_control)/config/control_sawyer.yaml"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find sawyer_gazebo)/urdf/sawyer_trex.urdf.xacro'
+    velodyne_enabled:=$(arg velodyne_enabled)
+    sick_enabled:=$(arg sick_enabled)
+    ur5_enabled:=$(arg ur5_enabled)
+    kinectv2_enabled:=$(arg kinectv2_enabled)
+    mbzirc_gripper:=$(arg mbzirc_gripper)
+    " />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Load Trex control information -->
+  <include file="$(find trex_control)/launch/trex_control.launch"/>
+  <rosparam command="load" file="$(arg sawyer_control_yaml_file)" />
+  <node name="arm_controller_spawner" pkg="controller_manager" type="spawner" args="robot/limb/right"/>
+
+  <group if="$(arg kinectv2_enabled)">
+
+    <!-- Include poincloud_to_laserscan if simulated Kinect is attached -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" output="screen">
+
+        <remap from="cloud_in" to="camera/depth/points"/>
+        <remap from="scan" to="camera/scan"/>
+        <rosparam>
+            target_frame: base_link # Leave empty to output scan in the pointcloud frame
+            tolerance: 1.0
+            min_height: 0.05
+            max_height: 1.0
+
+            angle_min: -0.610865 # -28.75*M_PI/180.0
+            angle_max: 0.610865 # 28.75*M_PI/180.0
+            angle_increment: 0.005 # M_PI/360.0
+            scan_time: 0.03333
+            range_min: 0.5
+            range_max: 4.5
+            use_inf: true
+
+            # Concurrency level, affects number of pointclouds queued for processing and number of threads used
+            # 0 : Detect number of cores
+            # 1 : Single threaded
+            # 2->inf : Parallelism level
+            concurrency_level: 1
+        </rosparam>
+    </node>
+
+  </group>
+
+  <node name="trex_spawn" pkg="gazebo_ros" type="spawn_model"
+    args="-x 0 -z 0 -y 0 -Y 0 -urdf -param robot_description -model trex -J right_j0 3.14"/>
+
+</launch>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<robot name="trex_sawyer" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find trex_description)/urdf/trex.xacro" />
+  <xacro:include filename="$(find sawyer_gazebo)/urdf/sawyer.urdf.xacro" />
+  <xacro:sawyer_robot real_mass="false"/>
+  <joint name="sawyer_arm_base" type="fixed">
+    <parent link="chassis_link" />
+    <child link="right_arm_base_link" />
+    <origin xyz="0.335 0 0.375" rpy="0.0 0.0 -1.57079632679" />
+  </joint>
+
+</robot>
